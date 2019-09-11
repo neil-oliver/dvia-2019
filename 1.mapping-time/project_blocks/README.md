@@ -3,6 +3,7 @@ Original design sketch found [here](https://github.com/neil-oliver/dvia-2019/tre
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/project_blocks/Blocks-Screenshot.png)
 
+## Code
 ```JavaScript
 var spacing = 20
 
