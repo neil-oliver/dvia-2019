@@ -28,11 +28,14 @@ Link to project files [here](https://github.com/neil-oliver/dvia-2019/tree/maste
 - While circles are days in the month not yetr completed
 - Colored cirlces (based on the month color) are completed days
 - Pie chart for progress through each day
+![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Orbital%20Calendar.png)
 
 ## Orbital Calendar
 - One rotation of the blue cirlcearound the yellow cirlce = 1 year
 - One rotation of the grey circle around the blue circle = 1 day
 - Change in colour of the blue circle to a dark grey = change from day and night
+![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Pie%20Chart%20Calendar.png)
+
 
 
 
