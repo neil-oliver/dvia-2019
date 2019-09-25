@@ -36,6 +36,15 @@ Link to project files [here](https://github.com/neil-oliver/dvia-2019/tree/maste
 - Change in colour of the blue circle to a dark grey = change from day and night
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Pie%20Chart%20Calendar.png)
 
+## Abstract Calendar
+- Each edge will grow from the center of the image to the edge.
+- Each edge represets a different value.
+- Top = Day
+- Right = Week
+- Bottom = Month
+- Left = Year
+![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Calendar%203.png)
+
 
 
 
