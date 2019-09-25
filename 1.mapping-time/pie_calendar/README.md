@@ -1,5 +1,13 @@
 # Pie Chart Calendar
 ## Sketch
+- 12 Small circles represeting each month
+- Each colour related to the season
+- Each circle is a pie chart representing the progress through the month
+- Larger cirlcles are days formatted in weekly rows
+- Grey cirlces are days not within the month
+- While circles are days in the month not yetr completed
+- Colored cirlces (based on the month color) are completed days
+- Pie chart for progress through each day
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Pie%20Chart%20Calendar.png)
 ## Final Design
 ### Changes from initial design
