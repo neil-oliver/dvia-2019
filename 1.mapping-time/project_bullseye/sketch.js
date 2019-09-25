@@ -13,23 +13,38 @@ function setup() {
 
 function draw() {
   background(40)
+
+
   noStroke()
-
   var now = clock()
-
-  var hourSize = h*0.8
-  var minSize = h*0.6
-  var secSize = h*0.4
-  
-  //draw hours cirle
-  fill(12, 154, 234)
-  ellipse(w/2, h/2, ((hourSize-minSize)*now.progress.day)+minSize);
-  
-  //draw minutes cirle
-  fill(255, 76, 76)
-  ellipse(w/2, h/2, ((minSize-secSize)*now.progress.hour)+secSize);
+  var size = h*0.8
 
   //draw seconds cirle
   fill(255, 221, 92)
-  ellipse(w/2, h/2, secSize*now.progress.min);
+  ellipse(w/2, h/2, size*now.progress.sec);
+
+  //draw minutes cirle
+  fill(255, 76, 76,150)
+  ellipse(w/2, h/2, size*now.progress.min);
+
+  //draw hours cirle
+  fill(12, 154, 234,150)
+  ellipse(w/2, h/2, size*now.progress.hour);
+
+  // draw scale 
+  stroke('#88898E')
+  strokeWeight(1)
+  line(w/2, h/2, w/2+(h*0.4), h/2)
+  hourTickW = w/2
+
+  for (i = 0; i < 13; i++){
+    if (i <= now.hour) {
+      fill('#42DB00')
+    } else {
+      fill(40)
+    }
+    if (1 == 0) {noFill()};
+    ellipse(hourTickW, h/2, 10)
+    hourTickW += (h*0.4)/12
+  }
 }

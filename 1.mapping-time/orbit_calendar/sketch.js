@@ -40,14 +40,13 @@ function draw() {
 
   var now = clock()
   //map the time to sine and cosine
-  yearMap = map(now.progress.year,0,1,0,2*Math.PI)
-  dayMap = map(now.progress.day,0,1,0,2*Math.PI)
-  monthMap = map(now.progress.month,0,1,0,2*Math.PI)
+  yearMap = map(now.progress.year,0,1,0,2*Math.PI) - HALF_PI;
+  dayMap = map(now.progress.day,0,1,0,2*Math.PI) - HALF_PI;
+  monthMap = map(now.progress.month,0,1,0,2*Math.PI) - HALF_PI;
 
 
   // change the background at day and night
   background(colorForBackground(now.progress.day))
-
 
   // create variables for next rotation position
   var x = orbitCenterX + orbitRadius * cos(yearMap);
