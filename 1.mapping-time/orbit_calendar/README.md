@@ -1,5 +1,8 @@
 # Orbit Calendar
 ## Sketch
+- One rotation of the blue cirlcearound the yellow cirlce = 1 year
+- One rotation of the grey circle around the blue circle = 1 day
+- Change in colour of the blue circle to a dark grey = change from day and night
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Orbital%20Calendar.png)
 ## Final Design
 ### Changes from initial Design
