@@ -1,5 +1,11 @@
 # Abstract Calendar
 ## Sketch
+- Each edge will grow from the center of the image to the edge.
+- Each edge represets a different value.
+- Top = Day
+- Right = Week
+- Bottom = Month
+- Left = Year
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Calendar%203.png)
 ## Final Design
 ### Changes to Initial Design
