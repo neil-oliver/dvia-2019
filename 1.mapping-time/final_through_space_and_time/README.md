@@ -4,6 +4,7 @@
 
 ## Final Product
 Multiple ways to tell the time!
+![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/final_through_space_and_time/through-space-and-time-final.png)
 
 ### Second
 - The time to takes one red circle to bounce up and down
