@@ -1,6 +1,18 @@
-# Orbital Clock-Calendar
+# Through Space and Time
 ## Design
-### Changes Made
+Design adapted from the [Orbital Calendar](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/date_2_orbit).
+
+### Additions to Original Design
+- Added sine wave balls to represent hour, minute, second.
+- Added stars to present how many days through the year
+- Added three progress bars on each orbit path to represent progress through the year, season, day and moon cycle.
+
+### Changes
+ - Removed the seasonal circle and replaced with seasonal progress bar.
+ - Changed the blue circle to rotate once a year (from one a month) to make it the correct orbit for earth.
+ - Changed the orbit of the grey cirlce to represent a full moon cycle.
+ - Changed the yellow circle to an atom shape to try and distinguish it from objects that represent an element of time.
+ - Removed / changed the alernating color background and settled on a night time theme.
 
 ## Final Product
 Multiple ways to tell the time!
