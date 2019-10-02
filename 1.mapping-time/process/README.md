@@ -71,8 +71,8 @@ Link to project files [here](https://github.com/neil-oliver/dvia-2019/tree/maste
 
 
 ## Hybrid ([Chosen Design](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/final_through_space_and_time)) - Through Space and Time
-Design adapted from the [Orbital Calendar](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/date_2_orbit) with changes to add time objects as well as make the orbits correct to the orbit of the sun, earth and moon. 
-
+Design adapted from the [Orbital Calendar](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/date_2_orbit) with changes to add time objects as well as make the orbits correct to the orbit of the sun, earth and moon. Details found [here](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/final_through_space_and_time).
+![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/hybrid_through_space_and_time.jpeg)
 
 
 
