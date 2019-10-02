@@ -39,7 +39,7 @@ function colorForBlue(pct){
 
 // seasons colors
 var seasonColor = ['#2983A6','#86BF0A','#C91400','#EC7B2B','#2983A6','#2983A6']
-var gradient3 = chroma.scale(seasonColor).mode('lab')
+var gradient3 = chroma.scale(seasonColor).mode('lch')
 function colorForSeason(pct){
   return gradient3(pct).hex()
 }
