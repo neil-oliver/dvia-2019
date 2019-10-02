@@ -49,18 +49,24 @@ function draw() {
   background(30);
   var now = clock();
   var yearDay = map(now.progress.year,0,1,1,365)
+  
   // random stars
-  for (let i=0; i<yearDay; i++){
-    noStroke()
-    fill(250)
-    ellipse(starX[i], starY[i], 2, 2);
+  for (let i=0; i< starX.length; i++){
+    if (i < yearDay) {
+      fill(200)
+    } else {
+      noFill()
+    }
+    stroke(100)
+    ellipse(starX[i], starY[i], 4, 4);
   }
 
   // draw lines for hour wave
   beginShape();
   for (var i=0; i<width; i++){
     noFill()
-    stroke(200)
+    stroke(100)
+    strokeWeight(1)
     let y = sin(map(i+25,0,((width)/24),0,TWO_PI)) * 100
     vertex(i, height-y-200);
   }  
@@ -70,7 +76,8 @@ function draw() {
   beginShape();    
   for (var i=0; i<width; i++){
     noFill()
-    stroke(200);
+    stroke(100);
+    strokeWeight(1)
     let y = sin(map(i,0,((width-1)/60),0,TWO_PI)) * 50
     vertex(i, height-y-150);    
 
@@ -131,13 +138,13 @@ function draw() {
   var y3 = y + orbitRadius/2.25 * sin(moonMap);
   
   noFill()
-  stroke(200)
+  stroke(50)
   // draw a large 'orbit path' cirlce with the center point variables above
   ellipse(orbitCenterX, orbitCenterY, h/2, h/2);
 
   // draw they grey cirlce orbit path
   noFill()
-  stroke(200)
+  stroke(50)
   ellipse(x, y, h/4.5, h/4.5);
   noStroke()
 
@@ -150,7 +157,7 @@ function draw() {
 
 
   // draw moon progress bar
-  stroke('#535454');
+  stroke('#464747');
   strokeWeight(5)
   arc(x,y,h/4.5, h/4.5,moonMap,moonMap-moonEndMap);
   strokeWeight(1)
@@ -177,8 +184,10 @@ function draw() {
   noStroke()
 
 
-  // draw the grey circle
-  fill('#535454');
+  // draw the moon
+  stroke(224, 224, 217);
+  strokeWeight(0.5)
+  fill('#464747');
   ellipse(x3, y3, h/40, h/40);
 
 }
