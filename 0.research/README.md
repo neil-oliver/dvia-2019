@@ -1,5 +1,6 @@
 # Lev Manovich
-[Manovich.net](http://manovich.net)
+[Manovich.net](http://manovich.net)  
+
 <img src="https://github.com/neil-oliver/dvia-2019/blob/master/0.research/manovich.jpg" alt="manovich" width="50%"/>
 
 ## Bio
@@ -31,8 +32,7 @@ Many of the projects were created at the cutting edge of technology for the time
 ## Projects
 Most of Manovich's work surround the use of 'New Media' which he defines as having 5 elemements, **Numerical representation, modularity, automation, variability, and transcoding**.
 
-### Mission To Earth
-[Mission to Earth Video Link](https://vimeo.com/44602928)
+### Mission To Earth - [Mission to Earth Video Link](https://vimeo.com/44602928)
 
 2003-2004
 - Apple opened the iTunes store.
@@ -41,8 +41,7 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/mission-to-earth.jpg)
 
-### Phototrails
-[Phototrails.info](http://phototrails.info/instagram-cities/)
+### Phototrails - [Phototrails.info](http://phototrails.info/instagram-cities/)
 
 2013 (A sleepy year in tech)
 - Apple release the iPhone 5S
@@ -52,8 +51,7 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/phototrails.jpg)
 
-### Selfiecity
-[selfiecity.net](http://selfiecity.net)
+### Selfiecity - [selfiecity.net](http://selfiecity.net)
 
 2014
 - Ellen [Crashed Twitter](https://twitter.com/theellenshow/status/440322224407314432)
@@ -62,8 +60,7 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/selfiecity.jpg)
 
-### On Broadway
-[on-broadway.nyc](http://www.on-broadway.nyc)
+### On Broadway - [on-broadway.nyc](http://www.on-broadway.nyc)
 
 2015
 - Windows 10 is released
@@ -73,8 +70,7 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/on-broadway.jpg)
 
-### Visual Earth
-[visual-earth.net](http://visual-earth.net)
+### Visual Earth - [visual-earth.net](http://visual-earth.net)
 
 2017
 - Twitter remove the 140 character limit
@@ -85,8 +81,7 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/visual-earth.jpg)
 
 ## Bonus Feature
-### Do Songs Of The Summer All Sound The Same?
-[New York Times](https://www.nytimes.com/interactive/2018/08/09/opinion/do-songs-of-the-summer-sound-the-same.html)
+### Do Songs Of The Summer All Sound The Same? - [New York Times](https://www.nytimes.com/interactive/2018/08/09/opinion/do-songs-of-the-summer-sound-the-same.html)
 - Not credited to Manovich or to culturalanalytics but the development is discussed in [this](https://www.youtube.com/watch?v=Bjjbhs0O3LE) video \[7:00].
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/NYT.png)
