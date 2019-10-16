@@ -1,4 +1,5 @@
 # Lev Manovich
+*A pioneer in the application of data science for analysis of contemporary culture.*
 [Manovich.net](http://manovich.net)  
 
 <img src="https://github.com/neil-oliver/dvia-2019/blob/master/0.research/manovich.jpg" alt="manovich" width="50%"/>
@@ -13,7 +14,7 @@
 **Fun Fact** : In 1977 Manovich wrote his first computer program on paper before entering it into a computer. When he did it gave him an error because he used O instead of 0.
 
 ## Current Positions
-- Author and editor of 13 books, including [The Language of New Media](https://mitpress.mit.edu/books/language-new-media).
+- Author and editor of 13 books
 - Professor, Ph.D. Program in Computer Science, The Graduate Center, City University of New York (CUNY)
 - Director, Cultural Analytics Lab (New York and La Jolla, California): [lab.culturalanalytics.info](http://lab.culturalanalytics.info)
 
@@ -30,7 +31,12 @@ Many of the projects were created at the cutting edge of technology for the time
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/Moore's_Law_Transistor_Count_1971-2018.png)
 
 ## Projects
-Most of Manovich's work surround the use of 'New Media' which he defines as having 5 elemements, **Numerical representation, modularity, automation, variability, and transcoding**.
+[The Language of New Media](https://mitpress.mit.edu/books/language-new-media).
+(Available through The New School library)
+2001
+- The 5 principles of New Media, **Numerical representation, modularity, automation, variability, and transcoding**.
+![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/language-of-new-media.jpg)
+
 
 ### Mission To Earth - [Mission to Earth Video Link](https://vimeo.com/44602928)
 
@@ -89,3 +95,6 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 
 ## Questions
 - Do you think a hypothesis should be the starting point in a visualization?
+- Do you see any issues in the use of social media to represent or evaluate culture (particularly in relation to Visual Earth)?
+- Many of Manovich's visualizations relate to out current use of social media. Do you think there are any other mass used electronic resources that could tell us about our current culture?
+
