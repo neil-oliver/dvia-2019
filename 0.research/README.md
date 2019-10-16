@@ -10,7 +10,7 @@
 - Receiving an M.A. in Visual Science and Cognitive Psychology from NYU in 1988
 - Received a Ph.D. in Visual and Cultural Studies from University of Rochester in 1993
 
-**Fun Fact** : Lev wrote his first computer program on paper before entering it into a computer. When he did it gave him an error because he used O instead of 0.
+**Fun Fact** : In 1977 Manovich wrote his first computer program on paper before entering it into a computer. When he did it gave him an error because he used O instead of 0.
 
 ## Current Positions
 - Author and editor of 13 books, including [The Language of New Media](https://mitpress.mit.edu/books/language-new-media).
