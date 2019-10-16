@@ -31,15 +31,18 @@ Many of the projects were created at the cutting edge of technology for the time
 Most of Manovich's work surround the use of 'New Media' which he defines as having 5 elemements, **Numerical representation, modularity, automation, variability, and transcoding**.
 
 ### Mission To Earth
+[Mission to Earth Video Link](https://vimeo.com/44602928)
+
 2003-2004
 - Apple opened the iTunes store.
 - Android was founded.
 - Top Grossing Film - The Lord of the Rings: The Return of the King
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/mission-to-earth.jpg)
-[Mission to Earth Video Link](https://vimeo.com/44602928)
 
 ### Phototrails
+[Phototrails.info](http://phototrails.info/instagram-cities/)
+
 2013 (A sleepy year in tech)
 - Apple release the iPhone 5S
 - Pebble introduce the first smartwatch
@@ -47,18 +50,20 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 - Top Grossing Film - Iron Man 3
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/phototrails.jpg)
-[Phototrails.info](http://phototrails.info/instagram-cities/)
 
 ### Selfiecity
+[selfiecity.net](http://selfiecity.net)
+
 2014
 - Ellen [Crashed Twitter](https://twitter.com/theellenshow/status/440322224407314432)
 - Social Media Usage [Increases 203%](https://mashable.com/2014/01/14/mobile-app-use-2013/)
 - Top Grossing Film - Transformers: Age Of Extinction
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/selfiecity.jpg)
-[selfiecity.net](http://selfiecity.net)
 
 ### On Broadway
+[on-broadway.nyc](http://www.on-broadway.nyc)
+
 2015
 - Windows 10 is released
 - AI gets [really good](https://en.wikipedia.org/wiki/AlphaGo)
@@ -66,9 +71,10 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 - Top Grossing Film - The Hunger Games: Mockingjay
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/on-broadway.jpg)
-[on-broadway.nyc](http://www.on-broadway.nyc)
 
 ### Visual Earth
+[visual-earth.net](http://visual-earth.net)
+
 2017
 - Twitter remove the 140 character limit
 - IoT gets so popular that we need [additional security](https://mashable.com/2017/01/04/ces-2017-super-secure-routers/)
@@ -76,7 +82,6 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 - Top Grossing Film - Beauty and the Beast
 
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/visual-earth.jpg)
-[visual-earth.net](http://visual-earth.net)
 
 ## Bonus Feature
 ### Do Songs Of The Summer All Sound The Same?
