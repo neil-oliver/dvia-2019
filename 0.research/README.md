@@ -26,7 +26,7 @@ His prested work on his website ranges from 1994 - 2018. To put that into contex
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/1994-films.png)
 
 ### Moore's Law
-Many of the projects were created at the cutting edge of technology for the time. It is easy to forget how fast technology evolves so for each project i will try and contexualize each project in terms of date and technology. This table of examples of Moore's Law (stating that the number of transistors in a computer doubles about every two years) also helps to give a reference point.
+Many of the projects were created at the cutting edge of technology for the time. In [2009](https://www.youtube.com/watch?v=xtbzVuDqSas) Manovich was using a supercomputer to do what many of us have created using AWS Cloud 9 or our own personal computers. It is easy to forget how fast technology evolves so for each project i will try and contexualize each project in terms of date and technology. This table of examples of Moore's Law (stating that the number of transistors in a computer doubles about every two years) also helps to give a reference point.
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/Moore's_Law_Transistor_Count_1971-2018.png)
 
 ## Projects
