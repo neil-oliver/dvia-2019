@@ -1,6 +1,7 @@
 # Lev Manovich
 [Manovich.net](http://manovich.net)
-![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/manovich.jpg)
+<img src="https://github.com/neil-oliver/dvia-2019/blob/master/0.research/manovich.jpg" alt="manovich" width="50%"/>
+
 ## Bio
 - Born in Moscow
 - Studied fine arts, architecture and computer programming.
@@ -87,6 +88,9 @@ Most of Manovich's work surround the use of 'New Media' which he defines as havi
 ### Do Songs Of The Summer All Sound The Same?
 [New York Times](https://www.nytimes.com/interactive/2018/08/09/opinion/do-songs-of-the-summer-sound-the-same.html)
 - Not credited to Manovich or to culturalanalytics but the development is discussed in [this](https://www.youtube.com/watch?v=Bjjbhs0O3LE) video \[7:00].
+
+![](https://github.com/neil-oliver/dvia-2019/blob/master/0.research/NYT.png)
+
 
 ## Questions
 - Do you think a hypothesis should be the starting point in a visualization?
