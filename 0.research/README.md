@@ -39,6 +39,7 @@ Many of the projects were created at the cutting edge of technology for the time
 
 
 ### Mission To Earth - [Mission to Earth Video Link](https://vimeo.com/44602928)
+[Additional Website Link](http://www.medienkunstnetz.de/works/soft-cinema/video/1/)
 
 2003-2004
 - Apple opened the iTunes store.
