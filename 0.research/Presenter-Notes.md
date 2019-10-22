@@ -45,23 +45,38 @@ His digital art projects were shown in over 100 group and personal exhibitions w
 - **In constrast** - Finding Nemo is in the cinema
 - 1998 - Database as a symbolic form (read in data structures)
 
+High resolution visualizations created with custom software using 2.3 million Instagram photos from 13 global cities. 
+
 ### Phototrails
 2013
 - Instagram has ~150 Million users by the end of 2013.
 - Use of grey for the background instead of white as discussed in Robert Simmons the subtle art of color
 
+Organized by hue mean (radius) and brightness mean (perimeter).
+
 ### Selfiecity
 2014
 - Instagram userbase **doubles** to ~300 Million users by the end of 2014.
-- 
+
+Selfiecity investigates selfies using a mix of theoretic, artistic and quantitative methods
+3200 Instagram selfie photos shared in 5 global cities
+only 3-5% of images were selfies
+
+
 ### On Broadway
 2015
 - Historical imagery is available on Google Street View
 
+Installation at New York Public Library
+13 such layers in the project
+ 
 ### Visual Earth
 
 2017
 - Project data is from **2011-2014**
+
+270 million geotagged images shared on Twitter
+100 urban areas - 10Km grid
 
 ## Bonus Feature
 ### Do Songs Of The Summer All Sound The Same?
