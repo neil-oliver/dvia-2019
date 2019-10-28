@@ -22,6 +22,10 @@ function colValsMinMax(source,colName) {
 
 function setup(){
   createCanvas(windowWidth, windowHeight)
+  
+  //SVG version
+  //createCanvas(windowWidth, windowHeight, SVG)
+
   background(50);
   stroke(255);
   textAlign(CENTER);
@@ -48,7 +52,7 @@ function setup(){
   var spendYear = colValsMinMax(spend,"year");
   var milex = colValsMinMax(spend,"bilex");
 
-  for (var i = 0; i < spend.getRowCount(); i++) {
+  for (var i = 1; i < spend.getRowCount(); i++) {
     let xpos = map(spendYear.values[i], x.min, x.max, 0+padding, width-padding);
     let ypos = map(milex.values[i], 0, milex.max, graphCenter, 0+padding);
     let xpos2 = map(spendYear.values[i+1], x.min, x.max, 0+padding, width-padding);
@@ -120,6 +124,8 @@ function setup(){
   text(seismic.min, width-padding-legendWidth,height-padding+10)
   text(seismic.max, width-padding,height-padding+10)
 
+  //save
+  //save('DVIA.svg')
 
 
 }
