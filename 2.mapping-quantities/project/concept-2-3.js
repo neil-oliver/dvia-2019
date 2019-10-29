@@ -9,25 +9,25 @@ var trendNuc
 var padding = 50
 
 function preload(){
-  power = loadTable('data/mil-power.csv',
+  power = loadTable('data/concept-2-3/mil-power.csv',
   'csv',
   'header');
-  population = loadTable('data/population.csv',
+  population = loadTable('data/concept-2-3/population.csv',
   'csv',
   'header');
-  spend = loadTable('data/mil-spend.csv',
+  spend = loadTable('data/concept-2-3/mil-spend.csv',
   'csv',
   'header');
-  personnel = loadTable('data/mil-personnel.csv',
+  personnel = loadTable('data/concept-2-3/mil-personnel.csv',
   'csv',
   'header');
-  wars = loadTable('data/wars.csv',
+  wars = loadTable('data/concept-2-3/wars.csv',
   'csv',
   'header');
-  largeNuc = loadTable('data/nuc-large-test.csv',
+  largeNuc = loadTable('data/concept-2-3/nuc-large-test.csv',
   'csv',
   'header');
-  trendNuc = loadTable('data/nuc-trend.csv',
+  trendNuc = loadTable('data/concept-2-3/nuc-trend.csv',
   'csv',
   'header');
 }
