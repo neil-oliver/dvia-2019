@@ -5,11 +5,16 @@
     html, body { height:100%; padding:0; margin:0; background:#e0e0d9; }
     /* uncomment next line to center the sketch in the window: */
     /*body { display:flex; justify-content:center; align-items:center; }*/
+    #canvas {
+      float : right;
+    }
+    
   </style>
   <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
 
   <!-- dependencies -->
   <script src="../libraries/lodash.min.js"></script>
+  <script src="../libraries/chroma.min.js"></script>
   <script src="../libraries/brewer.js"></script>
   <script src="../libraries/p5.min.js"></script>
   <script src="../libraries/p5.svg.js"></script>
@@ -19,5 +24,11 @@
 
 <body>
   <!-- p5.js will automatically create a canvas element here when the page loads -->
+  <div id="introduction">
+  <h1>The Correlates of War</h1>
+  Based on the 1962 investigation by....
+  </div>
+
+  <div id="canvas"></div>
 </body>
 </html>
