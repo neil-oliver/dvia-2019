@@ -17,6 +17,8 @@ const maxPersonnel = 0.103493148;
 const minPersonnel = 0.002150829;
 const maxPower = 0.4 //0.3838635;
 const minPower = 0.1 //0.0177723
+const conflictMax = 11
+const conflictScoreMax = 109
 
 function preload(){
   power = loadTable('data/concept-3/mil-power.csv',
@@ -34,6 +36,15 @@ function preload(){
   'csv',
   'header');
   noOfNuc = loadTable('data/concept-3/nuclear-test-numbers.csv',
+  'csv',
+  'header');
+  conflicts = loadTable('data/concept-3/wars.csv',
+  'csv',
+  'header');
+  conflictScore = loadTable('data/concept-3/conflict-score.csv',
+  'csv',
+  'header');
+  totals = loadTable('data/concept-3/totals.csv',
   'csv',
   'header');
 }
@@ -64,21 +75,44 @@ function rowValsMinMax(source,rowName) {
   return obj;
 }
 
-var resetX = 0+padding
-var resetY = 0+padding
-var x = resetX
-var y = resetY
+var resetX;
+var resetY;
+var x;
+var y;
+var country = ['China','France','USSR','UK','USA']
+var totalsWidth;
+var totalsHeight;
 
 function setup(){
   cnv = createCanvas(windowWidth, windowHeight);
   cnv.parent("canvas");
   var mainWidth = windowWidth*0.6
   var mainHeight = windowHeight
-  var totalsWidth = windowWidth*0.2
-  var totalsHeight = windowHeight
+  totalsWidth = windowWidth*0.2
+  totalsHeight = windowHeight
+  resetX = windowWidth*0.2
+  resetY = 0+padding
+  x = resetX
+  y = resetY
 
-  objectSize = width/30
+  objectSize = mainWidth/30
   textAlign(CENTER);
+  noStroke()
+  fill(100)
+  text('1954 - 1995 Totals',width-(totalsWidth/2),resetY)
+  var description = "TLDR; No.\n\
+  \nIn 1963 J. David Singer created the Composite Index of National Capability (CINP) as part of the Correlates of War project. The index uses 6 values to give a statistical value of state power beyond GDP. The index is still today considered to be still among the best-known and most accepted methods for measuring national capabilities.\n\
+  \nFocusing on 5 countries (USSR includes Russia after 1991), the central white line of the graph shows the rise and fall of each country based on the CINP value.\n\
+  \nTo compare the index to purely military values, above each line tracks each countries nuclear activity over 50 years and below the line follows each countries military personnel and military spend. Each central dot indicates the number and severity of International conflicts within the year.\n\
+  \nThe graph demonstrates the huge increase in military power however it does not seem to correlate to a states capability as measured by the CINP. "
+  textAlign(LEFT)
+  textSize(30)
+  fill(50)
+  text('Does the most powerful army mean the most powerful country?',padding/2,padding/2,width*0.15,mainHeight*0.6)
+  fill(100)
+  textSize(15)
+  text(description,padding/2,height*0.16,width*0.15,mainHeight*0.6)
+  textAlign(CENTER)
 
   for (var r = 0; r < power.getRowCount(); r++) {
     var year = 1945
@@ -86,47 +120,89 @@ function setup(){
     strokeWeight(3)
     stroke(200)
     powVal = rowValsMinMax(power,r);
-    line(x,y,width-padding,y)
+    line(x,y,resetX+mainWidth-padding,y)
+    
+    //totals brackets
+    strokeWeight(4)
+    line(x+mainWidth-(padding/2),y+10,x+mainWidth-(padding/2),y+(mainHeight/6.5))
+    line(width-(padding/2),y+10,width-(padding/2),y+(mainHeight/6.5))
+    line(width-(padding/2),y+10,width-(padding/2)-50,y+10)
+    line(width-(padding/2),y+(mainHeight/6.5),width-(padding/2)-50,y+(mainHeight/6.5))
+    line(x+mainWidth-(padding/2),y+10,x+mainWidth-(padding/2)+50,y+10)
+    line(x+mainWidth-(padding/2),y+(mainHeight/6.5),x+mainWidth-(padding/2)+50,y+(mainHeight/6.5))
 
+    var halfRowHeight = ((height/(power.getRowCount()+2))/2)
+    noStroke()
+    fill(100)
+    textSize(15)
+    text(country[r],x-(width/40),y+halfRowHeight)
+    stroke(200)
+    textSize(11)
+
+    //small lines
     for (var i=1;i<11;i++){
       strokeWeight(1)
-      var lineDiv = ((height/(power.getRowCount()+1))/10)*i
-      line(0+padding,y+lineDiv,width-padding,y+lineDiv)
-      //var axis = map(11-i, 1, 11, powVal.min, powVal.max)
-      //text(axis, 0+padding, y+lineDiv)
+      var lineDiv = ((mainHeight/(power.getRowCount()+1))/10)*i
+      line(resetX,y+lineDiv,resetX+mainWidth-padding,y+lineDiv)
+      fill(200)
+      if (i != 10){
+        text(10-i,resetX-10,y+lineDiv+5)
+      }
     }
 
-    for (var c = 1; c < power.getColumnCount()-3; c++) {
-      ymap = map(powVal.values[c], minPower, maxPower, (height/(power.getRowCount()+3))-objectSize+10,0)
-      ymap2 = map(powVal.values[c+1], minPower, maxPower, (height/(power.getRowCount()+3))-objectSize+10,0)
-      let powerScale  = chroma.scale('YlOrRd').mode('lch');
-      var powerColorVal = map(Math.log(powVal.values[c+1]), Math.log(minPower), Math.log(maxPower), 0, 1)
-      makeObject(x,y+ymap+(padding/2),x+(width/power.getColumnCount()),y+ymap2+(padding/2),r,c)
-      stroke(powerScale(powerColorVal).rgb())
-      strokeWeight(4)
-      line(x,y+ymap+(padding/2),x+(width/power.getColumnCount()),y+ymap2+(padding/2))
+    //CINP line
+    for (var c = 1; c < power.getColumnCount()-2; c++) {
+      ymap = map(powVal.values[c], minPower, maxPower, (mainHeight/(power.getRowCount()+3))-objectSize+10,0)
+      ymap2 = map(powVal.values[c+1], minPower, maxPower, (mainHeight/(power.getRowCount()+3))-objectSize+10,0)
 
-      stroke(200)
+      makeObject(x,y+ymap+(padding/2),x+(mainWidth/power.getColumnCount()+1),y+ymap2+(padding/2),r,c)
+      stroke(255)
+      strokeWeight(3)
+      line(x,y+ymap+(padding/2),x+(mainWidth/power.getColumnCount()),y+ymap2+(padding/2))
+      
+      //conflicts
+      conflictsSize = rowValsMinMax(conflicts,r);
+      conflictsCircleSize = map(Math.log(conflictsSize.values[c]), 0, Math.log(conflictMax), 0, objectSize/2)
+      let conflictScale  = chroma.scale('YlOrRd').mode('lch');
+      let conflictVal = rowValsMinMax(conflictScore,r);
+      var conflictColorVal = map(conflictVal.values[c], 0, conflictScoreMax, 0, 1)
+      fill(conflictScale(conflictColorVal).rgb())
       strokeWeight(1)
-      fill(powerScale(powerColorVal).rgb())
-      circle(x,y+ymap+(padding/2),5)
+      circle(x,y+ymap+(padding/2),conflictsCircleSize)
+
       noStroke()
-      fill(200)
+      fill(100)
       if (year%5 == 0) {
         text(year,x,0+padding-5)
       }
-      x+= (width-padding)/power.getColumnCount()
+      x+= (mainWidth-padding)/(power.getColumnCount()-3)
       year += 1
     }
+    //totals
+    for (var c = 1; c < totals.getColumnCount()-1; c++) {
+      makeTotal(mainWidth-totalsWidth,y,r,c)
+    }
 
-    y += height/(power.getRowCount()+1)
+    y += mainHeight/(power.getRowCount()+1)
     x = resetX
+
   }
+  fill(100)
+  noStroke()
+  text('1995',x+mainWidth-padding,0+padding-5)
+
   strokeWeight(3)
-  line(x,y,width-padding,y)
+  stroke(200)
+  line(x,y,resetX+mainWidth-padding,y)
 
   y = resetY
 
+  loadImage('quantities-key.svg', img => {
+    image(img,padding/2,windowHeight-(width*0.15)-(padding*2),width*0.15,width*0.15);
+  });
+
+
+  //save('war.svg')
 }
 
 function makeObject(x,y,x2,y2,r,c){
@@ -142,8 +218,6 @@ function makeObject(x,y,x2,y2,r,c){
 
   //no of nuc tests
   nucNo = rowValsMinMax(noOfNuc,r);
-  //console.log(personnelSize.min, personnelSize.max)
-
   nucRectSize = map(Math.log(nucNo.values[c]), 0, Math.log(nucTestMax), 0, objectSize)
   nucRectSize2 = map(Math.log(nucNo.values[c+1]), 0, Math.log(nucTestMax), 0, objectSize)
   quad(x, y, x,y-nucRectSize, x2, y2-nucRectSize2, x2,y2);
@@ -161,4 +235,33 @@ function makeObject(x,y,x2,y2,r,c){
   personnelRectSize2 = map(Math.log(personnelSize.values[c+1]), Math.log(minPersonnel), Math.log(maxPersonnel), 0, objectSize)
   quad(x, y, x,y+personnelRectSize, x2, y2+personnelRectSize2, x2,y2);
 
+}
+
+function makeTotal(x,y,r,c){
+  strokeWeight(1)
+  //totals
+  totalColor = [
+    'YlGnBu',
+    'YlGn',
+    'YlGn',
+    'YlOrRd'
+  ]
+  totalSize = rowValsMinMax(totals,c-1);
+  let totalScale = chroma.scale('reds').mode('lch');
+  var totalColorVal = map(totalSize.values[r], totalSize.min, totalSize.max, 0, 1)
+  fill(totalScale(totalColorVal).rgb())
+  totalsRectSize = map(totalSize.values[r], totalSize.min, totalSize.max, 0, totalsWidth-padding)
+  rect(windowWidth-totalsWidth,y+(c*(totalsHeight/30))-totalsHeight/60,totalsRectSize,totalsHeight/60)
+  noStroke()
+  fill(255)
+  textAlign('left')
+  totalsText = [
+    `${totalSize.values[r]} Nuclear Tests`,
+    `\$${totalSize.values[r]} Million Military Spend`,
+    `${totalSize.values[r]} Thousand Military Personnel`,
+    `${totalSize.values[r]} International Conflicts`
+  ]
+
+  text(totalsText[c-1],windowWidth-totalsWidth+5,y+(c*(totalsHeight/30)-7))
+  textAlign('center')
 }
