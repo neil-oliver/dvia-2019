@@ -4,5 +4,8 @@
 
 This visualization focusing on 5 countries, comparing the CINP value against miilitary measures includes spend, size, nuclear testing and international conflicts.
 
-![](./Concept-3-Screenshot.png)
+![](./Concept-3-Screenshot.png)  
+
+All values in the main graph except the CINP value are mapped to a [logarithmic scale](https://en.wikipedia.org/wiki/Logarithmic_scale). This allows comparisons between both time and country although absolute values are harder to deduct. The finals section on the right hand side of the visualization uses are linear scale that allows direct comparisons of absolute values between the countries.  
+
 ![](./quantities-key.svg)
