@@ -21,6 +21,7 @@ const conflictMax = 11
 const conflictScoreMax = 109
 
 function preload(){
+  //font = loadFont('https://fonts.googleapis.com/css?family=Jomolhari&display=swap');
   power = loadTable('data/concept-3/mil-power.csv',
   'csv',
   'header');
@@ -84,13 +85,14 @@ var totalsWidth;
 var totalsHeight;
 
 function setup(){
-  cnv = createCanvas(windowWidth, windowHeight);
+  cnv = createCanvas(1920, 1130);
+  console.log(windowWidth, windowHeight)
   cnv.parent("canvas");
-  var mainWidth = windowWidth*0.6
-  var mainHeight = windowHeight
-  totalsWidth = windowWidth*0.2
-  totalsHeight = windowHeight
-  resetX = windowWidth*0.2
+  var mainWidth = width*0.6
+  var mainHeight = height
+  totalsWidth = width*0.15
+  totalsHeight = height
+  resetX = width*0.25
   resetY = 0+padding
   x = resetX
   y = resetY
@@ -99,19 +101,23 @@ function setup(){
   textAlign(CENTER);
   noStroke()
   fill(100)
-  text('1954 - 1995 Totals',width-(totalsWidth/2),resetY)
-  var description = "TLDR; No.\n\
-  \nIn 1963 J. David Singer created the Composite Index of National Capability (CINP) as part of the Correlates of War project. The index uses 6 values to give a statistical value of state power beyond GDP. The index is still today considered to be still among the best-known and most accepted methods for measuring national capabilities.\n\
+  text('1954 - 1995 Totals',width-(totalsWidth/2)-(padding/2),resetY)
+  textFont('Helvetica');
+  var description = "In 1963 J. David Singer created the Composite Index of National Capability (CINP) as part of the Correlates of War project. The index uses 6 values to give a statistical value of State power beyond GDP. The index is still today considered to be still among the best-known and most accepted methods for measuring national capabilities.\n\
   \nFocusing on 5 countries (USSR includes Russia after 1991), the central white line of the graph shows the rise and fall of each country based on the CINP value.\n\
   \nTo compare the index to purely military values, above each line tracks each countries nuclear activity over 50 years and below the line follows each countries military personnel and military spend. Each central dot indicates the number and severity of International conflicts within the year.\n\
-  \nThe graph demonstrates the huge increase in military power however it does not seem to correlate to a states capability as measured by the CINP. "
+  \nThe graph demonstrates the huge increase in military power however it does not seem to correlate to a States capability as measured by the CINP. "
   textAlign(LEFT)
-  textSize(30)
+  textSize(35)
   fill(50)
-  text('Does the most powerful army mean the most powerful country?',padding/2,padding/2,width*0.15,mainHeight*0.6)
-  fill(100)
+  textStyle(BOLD);
+  text('Does the most powerful army mean the most powerful country?',padding,padding/2,(width*0.2)-10,mainHeight*0.6)
   textSize(15)
-  text(description,padding/2,height*0.16,width*0.15,mainHeight*0.6)
+  text('TLDR: No.',padding,(height*0.2)-(padding*0.2),(width*0.2)-10,mainHeight*0.6)
+  textStyle(NORMAL);
+  fill(100)
+  textSize(14)
+  text(description,padding,(height*0.2)+(padding*0.6),(width*0.2)-padding,mainHeight*0.6)
   textAlign(CENTER)
 
   for (var r = 0; r < power.getRowCount(); r++) {
@@ -198,7 +204,7 @@ function setup(){
   y = resetY
 
   loadImage('quantities-key.svg', img => {
-    image(img,padding/2,windowHeight-(width*0.15)-(padding*2),width*0.15,width*0.15);
+    image(img,padding/2,height-(width*0.19)-(padding*2),width*0.2,width*0.2);
   });
 
 
@@ -251,9 +257,13 @@ function makeTotal(x,y,r,c){
   var totalColorVal = map(totalSize.values[r], totalSize.min, totalSize.max, 0, 1)
   fill(totalScale(totalColorVal).rgb())
   totalsRectSize = map(totalSize.values[r], totalSize.min, totalSize.max, 0, totalsWidth-padding)
-  rect(windowWidth-totalsWidth,y+(c*(totalsHeight/30))-totalsHeight/60,totalsRectSize,totalsHeight/60)
+  var rectY = y+(c*(totalsHeight/30))
+  var rectHeight = totalsHeight/120
+  stroke('255')
+  strokeWeight(2)
+  rect(width-totalsWidth,rectY,totalsRectSize,rectHeight)
   noStroke()
-  fill(255)
+  fill(100)
   textAlign('left')
   totalsText = [
     `${totalSize.values[r]} Nuclear Tests`,
@@ -262,6 +272,6 @@ function makeTotal(x,y,r,c){
     `${totalSize.values[r]} International Conflicts`
   ]
 
-  text(totalsText[c-1],windowWidth-totalsWidth+5,y+(c*(totalsHeight/30)-7))
+  text(totalsText[c-1],width-totalsWidth+5,y+(c*(totalsHeight/30)-7))
   textAlign('center')
 }
