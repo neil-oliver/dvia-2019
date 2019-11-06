@@ -4,4 +4,5 @@
 
 This visualization focusing on 5 countries, comparing the CINP value against miilitary measures includes spend, size, nuclear testing and international conflicts.
 
-![](https://github.com/neil-oliver/dvia-2019/blob/master/2.mapping-quantities/project/Concept-3-Screenshot.png)
+![](./Concept-3-Screenshot.png)
+![](./quantities-key.svg)
