@@ -1,8 +1,5 @@
 ## Process
 
-Listing of the contents of this folder and a prose description of your ideas for how to represent
-the earthquake data geospatially and diagrammatically.
-
 # Designs
 ### Design 1
 Tooltip design to show frequency of earthquakes within a given area.  
@@ -16,4 +13,5 @@ Classic seimometer design showing the total magnitude for each time period (coul
 ![](./seismometer.jpeg)
 
 # Tile Designs
+Mapbox light and dark themes would minimise the distraction of other map features and focus on overlayed detail. Overlays that include population or population density would be interesting to see where the eathquakes could potentially cause more of an issue. 
 
