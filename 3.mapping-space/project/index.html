@@ -10,8 +10,8 @@
 
     /* default dimensions for the leaflet map */
     #quake-map{
-      width: 800px;
-      height: 600px;
+      width: 100%;
+      height: 60%;
     }
   </style>
 </head>
@@ -21,9 +21,13 @@
 
   <!-- load our dependencies and sketch file -->
   <script src="../libraries/leaflet/leaflet.js"></script>
+  <script src="./js/leaflet-providers.js"></script>
   <script src="../libraries/p5.min.js"></script>
   <script src="../libraries/lodash.min.js"></script>
   <script src="../libraries/brewer.js"></script>
+  <script src="../libraries/chroma.min.js"></script>
+  <script src="../libraries/moment.js"></script>
+
   <script src="sketch.js"></script>
 
   <!-- p5.js will create a canvas element here at runtime -->
