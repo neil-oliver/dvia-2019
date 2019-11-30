@@ -20,7 +20,7 @@ function preload() {
 function setup() {
     // first, call our map initialization function (look in the html's style tag to set its dimensions)
     setupMap()
-
+    frameRate(60)
     // generate a p5 diagram that complements the map, communicating the earthquake data non-spatially
 	createCanvas(w, h*0.4)
     // fill(0)
@@ -35,7 +35,11 @@ var monthInMilliseconds = 2592000000
 var start = new Date()
 start = start.getTime()
 var now = start - monthInMilliseconds;
-var interval = 60000000;
+var interval = 1440000; //1440000 //one day /60
+var nowDay;
+var thenDay;
+var fillMap;
+var fade;
 
 function setupMap(){
     /*
@@ -62,31 +66,70 @@ function setupMap(){
     }).addTo(mymap);
     
     markers = L.layerGroup().addTo(mymap);
-    console.log(now) 
 }
+
+$('#dateslider').val(0);
+$('#dateslider').on("input change", function(e) {
+    now = map($(this).val(),0,900,start-monthInMilliseconds, start+1)
+    markers.clearLayers();
+    addCircles();
+    $('#datetime').html(moment(now).format('LLLL'))
+})
 
 function draw(){
     background('#d1d1d1')
 
     xPos = w*0.1
 
-    if (now > start){
+    if (now >= start){
+        // one the animation has finished, show all
+        addCircles();
         noLoop()
-        mymap.panTo([0, 0],{animate:true});
+
+        //pan to a final point
+        //mymap.panTo([0, 0],{animate:true});
 
     }
 
     if (frameCount%1 == 0){
+
+        $('#dateslider').val( function(i, oldval) {
+            return parseInt( oldval, 10) + 1;
+        });
+        now = map($('#dateslider').val(),0,900,start-monthInMilliseconds, start+1)
+        markers.clearLayers();
+        $('#datetime').html(moment(now).format('LLLL'))
+
         // call our function (defined below) that populates the maps with markers based on the table contents
         addCircles();
         drawGraph()
 
-        now += interval
     }
 }
 
 function addCircles(){
-    markers.clearLayers();
+
+    ///////////////////////////////////////////////
+    // graph setup
+    var xPadding = width*0.1
+    var yPadding = height*0.1
+    var yMiddle = height/2
+    var magYmiddle = (height/2)-yPadding
+    var depthYmiddle = (height/2)+yPadding
+
+    //day high and low
+    magHigh = Number.NEGATIVE_INFINITY
+    magLow = Number.POSITIVE_INFINITY
+    depthHigh = Number.NEGATIVE_INFINITY
+    depthLow = Number.POSITIVE_INFINITY
+
+    magMax = columnMax(table, "mag");
+    magMin = columnMin(table, "mag");
+    depthMax = columnMax(table, "depth");
+    depthMin = columnMin(table, "depth");
+
+    ////////////////////////////////////////////////
+
 
     // calculate minimum and maximum values for magnitude and depth
     var magnitudeMin = 0.0;
@@ -112,7 +155,14 @@ function addCircles(){
         then = new Date(then);
         then = then.getTime()
 
-        if (then < now){
+        //check if the last run through to show all
+        if (now >= start){
+            fade = monthInMilliseconds
+         } else {
+            fade = interval*(10*row.get('mag'))
+         }
+
+        if (then < now && then > now-fade){
             var quakeColor = 'OrRd'
 
             var type = row.get('type')
@@ -136,20 +186,58 @@ function addCircles(){
                 magErrorMap = map(row.getNum('magError'), magErrorMin, magErrorMax, 0, 5)
             }
 
-            var timeMap = map(now-then, 0,30000000,1,0)
+            var timeMap = map(now-then, 0,fade,1,0)
 
+             if (now >= start){
+                $('#datetime').html('Past 30 Days')
+                fillMap = 0
+                timeMap = 1
+             } else {
+                fillMap = timeMap;
+             }
             // create a new dot
             var circle = L.circle([row.getNum('latitude'), row.getNum('longitude')], {
                 color: magScale(magColorVal).hex(),      // the dot stroke color
                 fillColor: magScale(magColorVal).hex(), // the dot fill color
-                fillOpacity: timeMap,  // use some transparency so we can see overlaps
-                opacity: 1,
+                fillOpacity: fillMap,  // use some transparency so we can see overlaps
+                opacity: timeMap,
                 weight: 1, //magErrorMap,
                 radius: row.getNum('mag') * 40000
-            }).bindPopup(row.get('place') + '<br>Magnitude: ' + row.getNum('mag').toString()).addTo(markers);
-            if (row.getNum('mag')>5 && then > now-interval){
-                mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true});
-            }
+            }).bindPopup(row.get('place') + '<br>Magnitude: ' + row.getNum('mag').toString() + '<br>'+ moment(row.get('time')).format('LLLL')).addTo(markers);
+            
+            //move to marker over 5 magnitude
+            // if (row.getNum('mag')>5 && then > now-interval){
+            //     mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true});
+            // }
+
+            ///////////////////////////////////////////////
+            // // create graph 
+
+            // // detect current day
+            // nowDay = moment(now).format('LL')
+            // thenDay = moment(then).format('LL')
+
+            // // create high and low for the day
+            // if (thenDay == nowDay){
+            //     if (magHigh < row.getNum('mag')){magHigh = row.getNum('mag')};
+            //     if (magLow > row.getNum('mag')){magLow = row.getNum('mag')};
+            //     if (depthHigh < row.getNum('depth')){depthHigh = row.getNum('depth')};
+            //     if (depthLow > row.getNum('depth')){depthLow = row.getNum('depth')};
+            // }
+
+            // var timescale = map(moment(then).startOf('day').valueOf(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
+
+            // console.log(moment(then).startOf('day').valueOf())
+            // magHigh = map(magHigh, 0, magMax, 0, height*0.3)
+            // magLow = map(magLow, 0, magMax, 0, height*0.3)
+            // var barWidth = 5
+
+            // stroke('white')
+            // strokeWeight(2)
+            // //mag bars
+            // fill('red')
+            // rect(timescale, magYmiddle-magLow,barWidth,-magHigh+magLow)
+
         }
     }
 }
