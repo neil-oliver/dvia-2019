@@ -1,7 +1,7 @@
 // the data loaded from a USGS-provided CSV file
 var table;
-var w = screen.width;
-var h = screen.height;
+var w = window.innerWidth;
+var h = window.innerHeight;
 
 var xPos = w*0.1
 var graphData;
