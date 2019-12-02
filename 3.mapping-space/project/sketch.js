@@ -22,7 +22,8 @@ function setup() {
     setupMap()
     frameRate(60)
     // generate a p5 diagram that complements the map, communicating the earthquake data non-spatially
-	createCanvas(w, h*0.4)
+    createCanvas(w, h*0.35)
+
     // fill(0)
     // noStroke()
     // textSize(16)
@@ -58,14 +59,15 @@ function setupMap(){
 
     // load a set of map tiles – choose from the different providers demoed here:
     // https://leaflet-extras.github.io/leaflet-providers/preview/
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 3,
-        id: 'mapbox.light',
+        id: 'dark-v10',
         accessToken: 'pk.eyJ1Ijoib2xpdm44OTciLCJhIjoiY2szNmx0dHZqMDA0YzNibnpmem1sM25tOCJ9.lkY_8AlzmT_xunxlmXQYDg'
     }).addTo(mymap);
     
     markers = L.layerGroup().addTo(mymap);
+
 }
 
 $('#dateslider').val(0);
@@ -77,7 +79,8 @@ $('#dateslider').on("input change", function(e) {
 })
 
 function draw(){
-    background('#d1d1d1')
+    background('#191a1a')
+    setupGraph()
 
     xPos = w*0.1
 
@@ -102,7 +105,6 @@ function draw(){
 
         // call our function (defined below) that populates the maps with markers based on the table contents
         addCircles();
-        drawGraph()
 
     }
 }
@@ -116,12 +118,6 @@ function addCircles(){
     var yMiddle = height/2
     var magYmiddle = (height/2)-yPadding
     var depthYmiddle = (height/2)+yPadding
-
-    //day high and low
-    magHigh = Number.NEGATIVE_INFINITY
-    magLow = Number.POSITIVE_INFINITY
-    depthHigh = Number.NEGATIVE_INFINITY
-    depthLow = Number.POSITIVE_INFINITY
 
     magMax = columnMax(table, "mag");
     magMin = columnMin(table, "mag");
@@ -203,42 +199,40 @@ function addCircles(){
                 opacity: timeMap,
                 weight: 1, //magErrorMap,
                 radius: row.getNum('mag') * 40000
-            }).bindPopup(row.get('place') + '<br>Magnitude: ' + row.getNum('mag').toString() + '<br>'+ moment(row.get('time')).format('LLLL')).addTo(markers);
+            }).bindPopup(row.get('place') + '<br>Magnitude: ' + row.getNum('mag').toString() + '<br>Depth: ' + row.getNum('depth').toString()  + 'km<br>Type: ' + row.get('type').toString() + '<br>'+ moment(row.get('time')).format('LLLL')).addTo(markers);
             
-            //move to marker over 5 magnitude
-            // if (row.getNum('mag')>5 && then > now-interval){
+            //move to marker over 6 magnitude
+            // if (row.getNum('mag')>6 && then > now-interval){
             //     mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true});
             // }
 
             ///////////////////////////////////////////////
-            // // create graph 
+            // create graph 
 
-            // // detect current day
-            // nowDay = moment(now).format('LL')
-            // thenDay = moment(then).format('LL')
+            var timescale = map(moment(then).startOf('day').valueOf(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
+            var magGraphScale = map(row.getNum('mag'),0,magMax,0, height*0.3)
+            var depthGraphScale = map(row.getNum('depth'),0,depthMax,0, height*0.3)
 
-            // // create high and low for the day
-            // if (thenDay == nowDay){
-            //     if (magHigh < row.getNum('mag')){magHigh = row.getNum('mag')};
-            //     if (magLow > row.getNum('mag')){magLow = row.getNum('mag')};
-            //     if (depthHigh < row.getNum('depth')){depthHigh = row.getNum('depth')};
-            //     if (depthLow > row.getNum('depth')){depthLow = row.getNum('depth')};
-            // }
 
-            // var timescale = map(moment(then).startOf('day').valueOf(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
+            var barWidth = (width*0.8)/35
+            strokeWeight(2)
 
-            // console.log(moment(then).startOf('day').valueOf())
-            // magHigh = map(magHigh, 0, magMax, 0, height*0.3)
-            // magLow = map(magLow, 0, magMax, 0, height*0.3)
-            // var barWidth = 5
+            magColorVal = map(row.getNum('mag'), magMin, magMax, 0, 1)
+            stroke(magScale(magColorVal).hex())
+            var magLine = line(timescale+barWidth, magYmiddle-magGraphScale,timescale+(barWidth*2),magYmiddle-magGraphScale)
+            //magLine.mouseOver(mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true}))
+            var depthColorVal = map(row.getNum('depth'), depthMin, depthMax, 0, 1)
+            let depthScale  = chroma.scale('YlGnBu').mode('lch');
+            stroke(depthScale(depthColorVal).hex())
+            line(timescale+barWidth, depthYmiddle+depthGraphScale,timescale+(barWidth*2),depthYmiddle+depthGraphScale)
 
-            // stroke('white')
-            // strokeWeight(2)
-            // //mag bars
-            // fill('red')
-            // rect(timescale, magYmiddle-magLow,barWidth,-magHigh+magLow)
+            noStroke()
+            textAlign(CENTER, CENTER);
+            text(moment(then).format('DD MMM'),timescale+(barWidth*1.5), yMiddle)
 
         }
+
+
     }
 }
 
@@ -275,7 +269,7 @@ function columnMin(tableObject, columnName){
     return _.min(colValues);
 }
 
-function drawGraph() {
+function setupGraph() {
 
     var xPadding = width*0.1
     var yPadding = height*0.1
@@ -293,53 +287,12 @@ function drawGraph() {
     magAvMin = columnMin(graphData, "magAv");
   
     barWidth = (width*0.8)/(graphData.getRowCount()*2)
-
-    // moving circle 
-    var timescale = map(now, start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
-    stroke('white')
-    fill('#bd0026')
-    circle(timescale, yMiddle,35)
   
     //middle line
     stroke('#636363')
     line(w*0.05, magYmiddle, w-(w*0.05), magYmiddle)
     line(w*0.05, depthYmiddle, w-(w*0.05), depthYmiddle)
 
-
-    //draw the bars
-    for (var i=0; i<graphData.getRowCount(); i++){
-      var row = graphData.getRow(i)
-  
-      magHigh = map(row.getNum('magHigh'), 0, magMax, 0, height*0.3)
-      magLow = map(row.getNum('magLow'), 0, magMax, 0, height*0.3)
-  
-      depthHigh = map(row.getNum('depthHigh'), 0, depthMax, 0, height*0.3)
-      depthLow = map(row.getNum('depthLow'), 0, depthMax, 0, height*0.3)
-  
-      magColorVal = map(row.getNum('magAv'), magAvMin, magAvMax, 0, 1)
-      depthColorVal = map(row.getNum('depthAv'), depthAvMin, depthAvMax, 0, 1)
-  
-      let magColorScale  = chroma.scale('YlOrRd').mode('lch');
-      let depthColorScale  = chroma.scale('YlGnBu').mode('lch');
-      
-      stroke('white')
-      strokeWeight(2)
-      //mag bars
-      fill(magColorScale(magColorVal).hex())
-      rect(xPos, magYmiddle-magLow,barWidth,-magHigh+magLow)
-  
-      // depth bars
-      fill(depthColorScale(depthColorVal).hex())
-      rect(xPos, depthYmiddle+depthLow,barWidth,depthHigh)
-      
-      // x axis
-      noStroke()
-      fill('#636363')
-      textAlign(CENTER, CENTER);
-      text(row.get('date'),xPos, yMiddle)
-      xPos = xPos+barWidth*2
-  
-    }
     
     // draw labels
     noStroke()
@@ -364,26 +317,7 @@ function drawGraph() {
       line(xPadding-barWidth, magtickPos, xPadding-barWidth-5, magtickPos)
       line(width-xPadding, depthtickPos, width-xPadding+5, depthtickPos)
     }
-
-    // // step through the rows of the table and add a dot for each event
-    // for (var i=0; i<table.getRowCount(); i++){
-    //     var row = table.getRow(i)
-
-    //     // skip over any rows where the magnitude data is missing
-    //     if (row.get('mag')==''){
-    //         continue
-    //     }
-
-    //     var then = row.get('time')
-    //     then = new Date(then);
-    //     then = then.getTime()
-
-    //     var lineHeight = map(row.getNum('mag'), columnMin(table, "mag"), columnMax(table, "mag"), magLow, magHigh)
-
-    //     stroke('white')
-    //     if (then < now){
-    //         line(timescale, magYmiddle-lineHeight,timescale+barWidth,magYmiddle-lineHeight)
-    //     }
-    // }
   
   }
+
+  
