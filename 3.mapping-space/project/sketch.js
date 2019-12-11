@@ -17,8 +17,75 @@ function preload() {
 
 }
 
+var heatMap = {}
+var heatMapMax = Number.NEGATIVE_INFINITY
+var heatMapMin = Number.POSITIVE_INFINITY
+var depthMap = {}
+var depthMapMax = Number.NEGATIVE_INFINITY
+var depthMapMin = Number.POSITIVE_INFINITY
+var mapAccuracy = 2
+
+function heatmap(){
+    console.log('running')
+    for (var i=0; i<table.getRowCount(); i++){
+        var row = table.getRow(i)
+        var day = moment(row.get('time')).format('M-D-Y');
+        var mag = row.getNum('mag').toFixed(mapAccuracy)
+        var depth = row.getNum('depth').toFixed(mapAccuracy)
+
+        if (!heatMap.hasOwnProperty(day)){
+            heatMap[day] = {}
+        }
+
+        if (!heatMap[day].hasOwnProperty(mag)){
+            heatMap[day][mag] = 1
+        } else {
+            heatMap[day][mag] += 1
+        }
+        /////////////
+        //depth
+
+        if (!depthMap.hasOwnProperty(day)){
+            depthMap[day] = {}
+        }
+
+        if (!depthMap[day].hasOwnProperty(depth)){
+            depthMap[day][depth] = 1
+        } else {
+            depthMap[day][depth] += 1
+        }
+
+        for (date in heatMap){
+            for (magnitude in heatMap[date]){
+                if (heatMap[date][magnitude] > heatMapMax){
+                    heatMapMax = heatMap[date][magnitude]
+                }
+                if (heatMap[date][magnitude] < heatMapMin){
+                    heatMapMin = heatMap[date][magnitude]
+                }
+            }
+        }
+
+        for (date in depthMap){
+            for (dep in depthMap[date]){
+                if (depthMap[date][dep] > depthMapMax){
+                    depthMapMax = depthMap[date][dep]
+                }
+                if (depthMap[date][dep] < depthMapMin){
+                    depthMapMin = depthMap[date][dep]
+                }
+            }
+        }
+    }
+    console.log(heatMap, heatMapMin, heatMapMax)
+
+    console.log(depthMap, depthMapMin, depthMapMax)
+
+}
+
 function setup() {
     // first, call our map initialization function (look in the html's style tag to set its dimensions)
+    heatmap()
     setupMap()
     frameRate(60)
     // generate a p5 diagram that complements the map, communicating the earthquake data non-spatially
@@ -41,6 +108,7 @@ var nowDay;
 var thenDay;
 var fillMap;
 var fade;
+var all = false
 
 function setupMap(){
     /*
@@ -65,6 +133,7 @@ function setupMap(){
         id: 'dark-v10',
         accessToken: 'pk.eyJ1Ijoib2xpdm44OTciLCJhIjoiY2szNmx0dHZqMDA0YzNibnpmem1sM25tOCJ9.lkY_8AlzmT_xunxlmXQYDg'
     }).addTo(mymap);
+
     
     markers = L.layerGroup().addTo(mymap);
 
@@ -78,6 +147,18 @@ $('#dateslider').on("input change", function(e) {
     $('#datetime').html(moment(now).format('LLLL'))
 })
 
+$('#playbutton').on('click', function(e){
+    if ($(this).hasClass('active')){
+        $(this).html('Stop')
+        loop()
+        draw()
+    } else {
+        $(this).html('Play')
+        noLoop()
+        draw()
+    }
+})
+
 function draw(){
     background('#191a1a')
     setupGraph()
@@ -88,6 +169,7 @@ function draw(){
         // one the animation has finished, show all
         addCircles();
         noLoop()
+        $('#playbutton').html('Stop')
 
         //pan to a final point
         //mymap.panTo([0, 0],{animate:true});
@@ -154,27 +236,29 @@ function addCircles(){
         //check if the last run through to show all
         if (now >= start){
             fade = monthInMilliseconds
+            all = true
          } else {
             fade = interval*(10*row.get('mag'))
+            all = false
          }
 
+         var quakeColor = 'OrRd'
+
+         var type = row.get('type')
+
+        if (type == 'quarry blast'){
+            quakeColor = 'BuGn'
+        } else if (type == 'ice quake'){
+            quakeColor = 'PuBu'
+        } else if (type == 'explosion'){
+            quakeColor = 'Purples'
+        }
+
+        let magScale  = chroma.scale(quakeColor).mode('lch');
+        var magColorVal = map(row.getNum('mag'), magnitudeMin, magnitudeMax, 0, 1)
+        var magErrorMap;
+
         if (then < now && then > now-fade){
-            var quakeColor = 'OrRd'
-
-            var type = row.get('type')
-
-            if (type == 'quarry blast'){
-                quakeColor = 'BuGn'
-            } else if (type == 'ice quake'){
-                quakeColor = 'PuBu'
-            } else if (type == 'explosion'){
-                quakeColor = 'Purples'
-            }
-
-
-            let magScale  = chroma.scale(quakeColor).mode('lch');
-            var magColorVal = map(row.getNum('mag'), magnitudeMin, magnitudeMax, 0, 1)
-            var magErrorMap;
 
             if (row.get('magError')==''){
                 magErrorMap = 0
@@ -208,20 +292,28 @@ function addCircles(){
 
             ///////////////////////////////////////////////
             // create graph 
-
             var timescale = map(moment(then).startOf('day').valueOf(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
             var magGraphScale = map(row.getNum('mag'),0,magMax,0, height*0.3)
             var depthGraphScale = map(row.getNum('depth'),0,depthMax,0, height*0.3)
 
+        }
 
+
+        //this is sloooooooow
+        if ((then < now && (moment(then).startOf('day').valueOf() == moment(now).startOf('day').valueOf())) || all == true){
             var barWidth = (width*0.8)/35
             strokeWeight(2)
+            magScale  = chroma.scale('OrRd').mode('lch');
 
-            magColorVal = map(row.getNum('mag'), magMin, magMax, 0, 1)
+            // var magColorVal = map(heatMap[moment(row.get('time')).format('M-D-Y')][row.getNum('mag').toFixed(mapAccuracy)], heatMapMin, heatMapMax, 0, 1)
+            var magColorVal = map(Math.log(heatMap[moment(row.get('time')).format('M-D-Y')][row.getNum('mag').toFixed(mapAccuracy)]), Math.log(heatMapMin), Math.log(heatMapMax), 0.4, 1) //log
+
             stroke(magScale(magColorVal).hex())
             var magLine = line(timescale+barWidth, magYmiddle-magGraphScale,timescale+(barWidth*2),magYmiddle-magGraphScale)
             //magLine.mouseOver(mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true}))
-            var depthColorVal = map(row.getNum('depth'), depthMin, depthMax, 0, 1)
+            // var depthColorVal = map(depthMap[moment(row.get('time')).format('M-D-Y')][row.getNum('depth').toFixed(mapAccuracy)], depthMapMin, depthMapMax, 0, 1)
+            var depthColorVal = map(Math.log(depthMap[moment(row.get('time')).format('M-D-Y')][row.getNum('depth').toFixed(mapAccuracy)]), Math.log(depthMapMin), Math.log(depthMapMax), 0.4, 1) //log
+
             let depthScale  = chroma.scale('YlGnBu').mode('lch');
             stroke(depthScale(depthColorVal).hex())
             line(timescale+barWidth, depthYmiddle+depthGraphScale,timescale+(barWidth*2),depthYmiddle+depthGraphScale)
@@ -229,9 +321,7 @@ function addCircles(){
             noStroke()
             textAlign(CENTER, CENTER);
             text(moment(then).format('DD MMM'),timescale+(barWidth*1.5), yMiddle)
-
         }
-
 
     }
 }
