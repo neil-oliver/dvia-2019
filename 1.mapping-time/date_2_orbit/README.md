@@ -5,6 +5,7 @@
 - Change in colour of the blue circle to a dark grey = change from day and night
 ![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/process/Orbital%20Calendar.png)
 ## Final Design
+![](./Orbit-Calendar-Screenshot.png)
 ### Changes from initial Design
 The implentation was true to the original sketch with a few additions
 - A 3rd oribiting cirle is added that will rotate once in a year
