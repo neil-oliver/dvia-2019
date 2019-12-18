@@ -1,7 +1,7 @@
 # Blocks
 Original design sketch found [here](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/process)
 
-![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/project_blocks/Blocks-Screenshot.png)
+![](./Blocks-Screenshot.png)
 
 ## Code
 ```JavaScript
