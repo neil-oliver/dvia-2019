@@ -1,19 +1,31 @@
 // the data loaded from a USGS-provided CSV file
 var table;
-var w = window.innerWidth;
+var w = window.innerWidth - 100;
 var h = window.innerHeight;
+var totalCount = 0;
+var selectedMax = 9
+var selectedMin = -3
+var pad = 25;
 
 var xPos = w*0.1
 var graphData;
 
+const month = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 // my leaflet.js map
 var mymap;
 
+var play = false
+
 function preload() {
+    setupMap()
+    myFont = loadFont('fonts/Oswald-Light.ttf');
+
     // load the CSV data into our `table` variable and clip out the header row
-    //table = loadTable("../data/all_month.csv", "csv", "header");
-    table = loadTable("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv", "csv", "header");
-    graphData = loadTable("monthHighLow.csv", "csv", "header");
+    table = loadTable("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv", "csv", "header"); //Live
+
 
 }
 
@@ -23,15 +35,20 @@ var heatMapMin = Number.POSITIVE_INFINITY
 var depthMap = {}
 var depthMapMax = Number.NEGATIVE_INFINITY
 var depthMapMin = Number.POSITIVE_INFINITY
-var mapAccuracy = 2
+var mapAccuracy = 1
 
 function heatmap(){
     console.log('running')
     for (var i=0; i<table.getRowCount(); i++){
         var row = table.getRow(i)
-        var day = moment(row.get('time')).format('M-D-Y');
+        var day = new Date(row.get('time'));
+        var dd = day.getDate();
+        var mm = day.getMonth()+1; 
+        var yyyy = day.getFullYear();
+        day = mm+'-'+dd+'-'+yyyy;
+
         var mag = row.getNum('mag').toFixed(mapAccuracy)
-        var depth = row.getNum('depth').toFixed(mapAccuracy)
+        var depth = row.getNum('depth').toFixed(0)
 
         if (!heatMap.hasOwnProperty(day)){
             heatMap[day] = {}
@@ -80,23 +97,31 @@ function heatmap(){
     console.log(heatMap, heatMapMin, heatMapMax)
 
     console.log(depthMap, depthMapMin, depthMapMax)
+    $('#depthscalemax').html(depthMapMax)
+    $('#depthscalemin').html(depthMapMin)
+    $('#magscalemax').html(heatMapMax)
+    $('#magscalemin').html(heatMapMin)
+
 
 }
+var magMax;
+var magMin;
+var depthMax;
+var depthMin;
 
 function setup() {
+    textFont(myFont);
+
+    magMax = columnMax(table, "mag");
+    magMin = columnMin(table, "mag");
+    depthMax = columnMax(table, "depth");
+    depthMin = columnMin(table, "depth");
     // first, call our map initialization function (look in the html's style tag to set its dimensions)
     heatmap()
-    setupMap()
     frameRate(60)
     // generate a p5 diagram that complements the map, communicating the earthquake data non-spatially
-    createCanvas(w, h*0.35)
-
-    // fill(0)
-    // noStroke()
-    // textSize(16)
-    // text(`Plotting ${table.getRowCount()} seismic events`, 20, 40)
-    // text(`Largest Magnitude: ${columnMax(table, "mag")}`, 20, 60)
-    // text(`Greatest Depth: ${columnMax(table, "depth")}`, 20, 80)
+    var canvas = createCanvas(w, h*0.50)
+    canvas.parent('graph')
 }
 let markers;
 var monthInMilliseconds = 2592000000
@@ -122,16 +147,26 @@ function setupMap(){
     // create your own map
     mymap = L.map('quake-map',{
         center: [40.7831, -73.9712],
-        zoom: 4
+        zoom: 3,
+        zoomControl: false
     });
 
     // load a set of map tiles – choose from the different providers demoed here:
     // https://leaflet-extras.github.io/leaflet-providers/preview/
     L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 3,
         id: 'dark-v10',
+        maxZoom: 10,
+        minZoom: 3,
         accessToken: 'pk.eyJ1Ijoib2xpdm44OTciLCJhIjoiY2szNmx0dHZqMDA0YzNibnpmem1sM25tOCJ9.lkY_8AlzmT_xunxlmXQYDg'
+    }).addTo(mymap);
+
+    mymap.scrollWheelZoom.disable()
+
+    //add zoom control with your options
+    L.control.zoom({
+        zoom:3,
+        position:'topright'
     }).addTo(mymap);
 
     
@@ -139,17 +174,44 @@ function setupMap(){
 
 }
 
+$("#ex2").slider({});
+$("#ex2").on("slide", function(slideEvt) {
+    selectedMin = slideEvt.value[0];
+    selectedMax = slideEvt.value[1];
+    $('#selectmin').html(selectedMin)
+    $('#selectmax').html(selectedMax)
+
+});
+
+
 $('#dateslider').val(0);
 $('#dateslider').on("input change", function(e) {
     now = map($(this).val(),0,900,start-monthInMilliseconds, start+1)
     markers.clearLayers();
+    clear()
+    setupGraph()
     addCircles();
-    $('#datetime').html(moment(now).format('LLLL'))
 })
 
+$('#scrolllink').on('click', function(e){
+
+    if ($("#playbutton").hasClass('active')){
+        $("#playbutton").click();
+    }
+    $(document).scrollTop( $("#map").offset().top );  
+
+})
+
+$("#playbutton").click();
+
 $('#playbutton').on('click', function(e){
+    if (now >= start){
+        $('#dateslider').val(0);
+    }
+    play = true
     if ($(this).hasClass('active')){
         $(this).html('Stop')
+        $(document).scrollTop( $("#map").offset().top );  
         loop()
         draw()
     } else {
@@ -160,52 +222,60 @@ $('#playbutton').on('click', function(e){
 })
 
 function draw(){
-    background('#191a1a')
-    setupGraph()
+    //total countup
+    if (totalCount < table.getRowCount()){
+        if(totalCount + 313 > table.getRowCount()){
+            totalCount = table.getRowCount()
+        } else {
+            totalCount += 313
+        }
+        $('#total').html(numberWithCommas(totalCount))
+    } else {
+        if (play==true){
+            clear();
+            setupGraph()
 
-    xPos = w*0.1
+            xPos = w*0.1
 
-    if (now >= start){
-        // one the animation has finished, show all
-        addCircles();
-        noLoop()
-        $('#playbutton').html('Stop')
+            if (now >= start){
+                // one the animation has finished, show all
+                $('#playbutton').html('Play')
+                addCircles();
+                noLoop()
 
-        //pan to a final point
-        //mymap.panTo([0, 0],{animate:true});
+                //pan to a final point
+                //mymap.panTo([0, 0],{animate:true});
+            }
 
+            $('#dateslider').val( function(i, oldval) {
+                return parseInt( oldval, 10) + 1;
+            });
+            now = map($('#dateslider').val(),0,900,start-monthInMilliseconds, start+1)
+            markers.clearLayers();
+
+            // call our function (defined below) that populates the maps with markers based on the table contents
+            addCircles();
+        }
     }
 
-    if (frameCount%1 == 0){
-
-        $('#dateslider').val( function(i, oldval) {
-            return parseInt( oldval, 10) + 1;
-        });
-        now = map($('#dateslider').val(),0,900,start-monthInMilliseconds, start+1)
-        markers.clearLayers();
-        $('#datetime').html(moment(now).format('LLLL'))
-
-        // call our function (defined below) that populates the maps with markers based on the table contents
-        addCircles();
-
-    }
 }
 
 function addCircles(){
 
+    var m = new Date(now)
+    var dateString = m.getUTCDate() +" "+ month[m.getUTCMonth()] +" "+ m.getUTCFullYear();
+    var timeString = m.getUTCHours() + ":" + m.getUTCMinutes()+ ":00";
+
+    $('#date').html(dateString)
+    $('#time').html(timeString)
+
     ///////////////////////////////////////////////
     // graph setup
-    var xPadding = width*0.1
+    var xPadding = 0// width*0.1
     var yPadding = height*0.1
     var yMiddle = height/2
     var magYmiddle = (height/2)-yPadding
     var depthYmiddle = (height/2)+yPadding
-
-    magMax = columnMax(table, "mag");
-    magMin = columnMin(table, "mag");
-    depthMax = columnMax(table, "depth");
-    depthMin = columnMin(table, "depth");
-
     ////////////////////////////////////////////////
 
 
@@ -230,6 +300,11 @@ function addCircles(){
         }
 
         var then = row.get('time')
+
+        if (then > now && all == false){
+            break
+        }
+
         then = new Date(then);
         then = then.getTime()
 
@@ -242,23 +317,25 @@ function addCircles(){
             all = false
          }
 
-         var quakeColor = 'OrRd'
 
-         var type = row.get('type')
 
-        if (type == 'quarry blast'){
-            quakeColor = 'BuGn'
-        } else if (type == 'ice quake'){
-            quakeColor = 'PuBu'
-        } else if (type == 'explosion'){
-            quakeColor = 'Purples'
-        }
+        if (then < now && then > now-fade && row.getNum('mag') >= selectedMin && row.getNum('mag') <= selectedMax){
 
-        let magScale  = chroma.scale(quakeColor).mode('lch');
-        var magColorVal = map(row.getNum('mag'), magnitudeMin, magnitudeMax, 0, 1)
-        var magErrorMap;
+            var quakeColor = 'OrRd'
 
-        if (then < now && then > now-fade){
+            var type = row.get('type')
+   
+           if (type == 'quarry blast'){
+               quakeColor = 'BuGn'
+           } else if (type == 'ice quake'){
+               quakeColor = 'PuBu'
+           } else if (type == 'explosion'){
+               quakeColor = 'Purples'
+           }
+   
+           let magScale  = chroma.scale(quakeColor).mode('lch');
+           var magColorVal = map(row.getNum('mag'), magnitudeMin, magnitudeMax, 0, 1)
+           var magErrorMap;
 
             if (row.get('magError')==''){
                 magErrorMap = 0
@@ -275,6 +352,8 @@ function addCircles(){
              } else {
                 fillMap = timeMap;
              }
+
+
             // create a new dot
             var circle = L.circle([row.getNum('latitude'), row.getNum('longitude')], {
                 color: magScale(magColorVal).hex(),      // the dot stroke color
@@ -282,58 +361,61 @@ function addCircles(){
                 fillOpacity: fillMap,  // use some transparency so we can see overlaps
                 opacity: timeMap,
                 weight: 1, //magErrorMap,
-                radius: row.getNum('mag') * 40000
-            }).bindPopup(row.get('place') + '<br>Magnitude: ' + row.getNum('mag').toString() + '<br>Depth: ' + row.getNum('depth').toString()  + 'km<br>Type: ' + row.get('type').toString() + '<br>'+ moment(row.get('time')).format('LLLL')).addTo(markers);
+                radius: Math.pow(row.getNum('mag'),3)*2000
+            }).bindPopup(row.get('place') + '<br>Magnitude: ' + row.getNum('mag').toString() + '<br>Depth: ' + row.getNum('depth').toString()  + 'km<br>Type: ' + row.get('type').toString() + '<br>'+ dateString + ' ' + timeString).addTo(markers);
             
             //move to marker over 6 magnitude
             // if (row.getNum('mag')>6 && then > now-interval){
             //     mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true});
             // }
 
-            ///////////////////////////////////////////////
-            // create graph 
-            var timescale = map(moment(then).startOf('day').valueOf(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
-            var magGraphScale = map(row.getNum('mag'),0,magMax,0, height*0.3)
-            var depthGraphScale = map(row.getNum('depth'),0,depthMax,0, height*0.3)
-
         }
 
 
-        //this is sloooooooow
-        if ((then < now && (moment(then).startOf('day').valueOf() == moment(now).startOf('day').valueOf())) || all == true){
-            var barWidth = (width*0.8)/35
-            strokeWeight(2)
-            magScale  = chroma.scale('OrRd').mode('lch');
+        if (then < now && row.getNum('mag') >= selectedMin && row.getNum('mag') <= selectedMax){
+            jsthen = new Date(then)
+            jsthen.setHours(0,0,0,0);
 
-            // var magColorVal = map(heatMap[moment(row.get('time')).format('M-D-Y')][row.getNum('mag').toFixed(mapAccuracy)], heatMapMin, heatMapMax, 0, 1)
-            var magColorVal = map(Math.log(heatMap[moment(row.get('time')).format('M-D-Y')][row.getNum('mag').toFixed(mapAccuracy)]), Math.log(heatMapMin), Math.log(heatMapMax), 0.4, 1) //log
+            var jsnow =  new Date(now)
+            jsnow.setHours(0,0,0,0)
 
-            stroke(magScale(magColorVal).hex())
-            var magLine = line(timescale+barWidth, magYmiddle-magGraphScale,timescale+(barWidth*2),magYmiddle-magGraphScale)
-            //magLine.mouseOver(mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true}))
-            // var depthColorVal = map(depthMap[moment(row.get('time')).format('M-D-Y')][row.getNum('depth').toFixed(mapAccuracy)], depthMapMin, depthMapMax, 0, 1)
-            var depthColorVal = map(Math.log(depthMap[moment(row.get('time')).format('M-D-Y')][row.getNum('depth').toFixed(mapAccuracy)]), Math.log(depthMapMin), Math.log(depthMapMax), 0.4, 1) //log
+            if (jsthen.getTime() == jsnow.getTime() || all == true){
+                ///////////////////////////////////////////////
+                // create graph 
+                var timescale = map(jsthen.getTime(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
+                var magGraphScale = map(row.getNum('mag'),0,magMax,0, height*0.3)
+                var depthGraphScale = map(row.getNum('depth'),0,depthMax,0, height*0.3)
 
-            let depthScale  = chroma.scale('YlGnBu').mode('lch');
-            stroke(depthScale(depthColorVal).hex())
-            line(timescale+barWidth, depthYmiddle+depthGraphScale,timescale+(barWidth*2),depthYmiddle+depthGraphScale)
 
-            noStroke()
-            textAlign(CENTER, CENTER);
-            text(moment(then).format('DD MMM'),timescale+(barWidth*1.5), yMiddle)
+                var dd = jsthen.getDate();
+                var mm = jsthen.getMonth()+1; 
+                var yyyy = jsthen.getFullYear();
+                jsthen = mm+'-'+dd+'-'+yyyy;
+
+                var barWidth = (width*0.8)/35
+                strokeWeight(2)
+                magScale  = chroma.scale('RdPu').mode('lch');
+
+                var magColorVal = map(Math.log(heatMap[jsthen][row.getNum('mag').toFixed(mapAccuracy)]), Math.log(heatMapMin), Math.log(heatMapMax), 1, 0) //log
+
+                stroke(magScale(magColorVal).hex())
+                line(timescale+barWidth+pad, magYmiddle-magGraphScale,timescale+(barWidth*2)+pad,magYmiddle-magGraphScale)
+                //magLine.mouseOver(mymap.panTo([row.getNum('latitude'), row.getNum('longitude')],{animate:true}))
+                var depthColorVal = map(Math.log(depthMap[jsthen][row.getNum('depth').toFixed(0)]), Math.log(depthMapMin), Math.log(depthMapMax), 0.8, 0) //log
+                let depthScale  = chroma.scale('YlGnBu').mode('lch');
+                stroke(depthScale(depthColorVal).hex())
+                line(timescale+barWidth+pad, depthYmiddle+depthGraphScale,timescale+(barWidth*2)+pad,depthYmiddle+depthGraphScale)
+
+                noStroke()
+                fill('#636363')
+                textAlign(CENTER, CENTER);
+                text(dd+' '+month[mm-1].substring(0, 3),timescale+(barWidth*1.5)+pad, yMiddle)
+            }
         }
 
     }
 }
 
-// removes any circles that have been added to the map
-function removeAllCircles(){
-    mymap.eachLayer(function(layer){
-        if (layer instanceof L.Circle){
-            mymap.removeLayer(layer)
-        }
-    })
-}
 
 // get the maximum value within a column
 function columnMax(tableObject, columnName){
@@ -361,53 +443,63 @@ function columnMin(tableObject, columnName){
 
 function setupGraph() {
 
-    var xPadding = width*0.1
+    var xPadding = 0//width*0.1
     var yPadding = height*0.1
     var yMiddle = height/2
     var magYmiddle = (height/2)-yPadding
     var depthYmiddle = (height/2)+yPadding
-    
-    magMax = columnMax(graphData, "magHigh");
-    magMin = columnMin(graphData, "magLow");
-    depthMax = columnMax(graphData, "depthHigh");
-    depthMin = columnMin(graphData, "depthLow");
-    depthAvMax = columnMax(graphData, "depthAv");
-    depthAvMin = columnMin(graphData, "depthAv");
-    magAvMax = columnMax(graphData, "magAv");
-    magAvMin = columnMin(graphData, "magAv");
+
   
-    barWidth = (width*0.8)/(graphData.getRowCount()*2)
+    barWidth = (width*0.8)/(30*2)
   
     //middle line
     stroke('#636363')
-    line(w*0.05, magYmiddle, w-(w*0.05), magYmiddle)
-    line(w*0.05, depthYmiddle, w-(w*0.05), depthYmiddle)
-
-    
-    // draw labels
+    line(0, magYmiddle, w, magYmiddle)
+    line(0, depthYmiddle, w, depthYmiddle)
+    line(0, depthYmiddle,0,depthYmiddle+(height*0.3))
+    line(0, magYmiddle,0,magYmiddle-(height*0.3))
     noStroke()
     fill('#636363')
     textAlign(LEFT)
-    text('Magnitude',xPadding/2, yMiddle/2)
-    textAlign(LEFT)
-    text('Depth',width-xPadding+barWidth, yMiddle+(yMiddle/2))
+
+    for (var x=1; x<7;x++){
+        var tick = map(x,0,magMax,0, height*0.3)
+        //line(0, magYmiddle-tick, w, magYmiddle-tick)
+        text(x,10,magYmiddle-tick)
+        text(((depthMax/6)*x).toFixed(0),10,depthYmiddle+tick)
+
+    }
+
+    
+    // draw labels
+    // noStroke()
+    // fill('#636363')
+    // textAlign(LEFT)
+    // text('Magnitude',xPadding/2, yMiddle/2)
+    // textAlign(LEFT)
+    // text('Depth',width-xPadding+barWidth, yMiddle+(yMiddle/2))
     
     // draw y axis
-    stroke('#636363')
-    strokeWeight(2)
-    line(xPadding-barWidth, magYmiddle, xPadding-barWidth, yPadding)
-    line(width-xPadding, depthYmiddle, width-xPadding, height-yPadding)
-    strokeWeight(1)
+    // stroke('#636363')
+    // strokeWeight(2)
+    // line(xPadding-barWidth, magYmiddle, xPadding-barWidth, yPadding)
+    // line(width-xPadding, depthYmiddle, width-xPadding, height-yPadding)
+    // strokeWeight(1)
     
-    // tick marks for y axis
-    for (var i=0;i<10;i++){
-      var magtickPos = map(i,0,9,magYmiddle,yPadding)
-      var depthtickPos = map(i,0,9,depthYmiddle,height-yPadding)
+    // // tick marks for y axis
+    // for (var i=0;i<10;i++){
+    //   var magtickPos = map(i,0,9,magYmiddle,yPadding)
+    //   var depthtickPos = map(i,0,9,depthYmiddle,height-yPadding)
   
-      line(xPadding-barWidth, magtickPos, xPadding-barWidth-5, magtickPos)
-      line(width-xPadding, depthtickPos, width-xPadding+5, depthtickPos)
-    }
+    //   line(xPadding-barWidth, magtickPos, xPadding-barWidth-5, magtickPos)
+    //   line(width-xPadding, depthtickPos, width-xPadding+5, depthtickPos)
+    // }
   
   }
+
+  //number formatting
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
   
