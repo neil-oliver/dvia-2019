@@ -1,5 +1,6 @@
 # Pie Chart Calendar
 ## Sketch
+![](./Pie-Calendar-Screenshot.png)
 - 12 Small circles represeting each month
 - Each colour related to the season
 - Each circle is a pie chart representing the progress through the month
