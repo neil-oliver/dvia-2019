@@ -2,6 +2,7 @@
 Original design sketch found [here](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/process)
 
 ![](./Blocks-Screenshot.png)
+![](./Blocks-Screenshot-update.png)
 
 ## Code
 ```JavaScript
