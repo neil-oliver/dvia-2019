@@ -1,6 +1,6 @@
 # Racing Dots
 Original design sketch found [here](https://github.com/neil-oliver/dvia-2019/tree/master/1.mapping-time/process)
-![](https://github.com/neil-oliver/dvia-2019/blob/master/1.mapping-time/project_racing_dots/Racing-dots-screenshot.png)
+![](./Racing-dots-screenshot.png)
 
 ## Code
 ```javascript
