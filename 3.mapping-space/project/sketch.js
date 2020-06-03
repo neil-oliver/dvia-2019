@@ -3,8 +3,8 @@ var table;
 var w = window.innerWidth - 100;
 var h = window.innerHeight;
 var totalCount = 0;
-var selectedMax = 9
-var selectedMin = -3
+var selectedMax = 9;
+var selectedMin = -3;
 var pad = 25;
 
 var xPos = w*0.1
@@ -24,8 +24,8 @@ function preload() {
     myFont = loadFont('fonts/Oswald-Light.ttf');
 
     // load the CSV data into our `table` variable and clip out the header row
+    //table = loadTable("./all_month.csv", "csv", "header"); //Live
     table = loadTable("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv", "csv", "header"); //Live
-
 
 }
 
@@ -38,6 +38,7 @@ var depthMapMin = Number.POSITIVE_INFINITY
 var mapAccuracy = 1
 
 function heatmap(){
+
     console.log('running')
     for (var i=0; i<table.getRowCount(); i++){
         var row = table.getRow(i)
@@ -46,9 +47,10 @@ function heatmap(){
         var mm = day.getMonth()+1; 
         var yyyy = day.getFullYear();
         day = mm+'-'+dd+'-'+yyyy;
-
-        var mag = row.getNum('mag').toFixed(mapAccuracy)
-        var depth = row.getNum('depth').toFixed(0)
+        var mag = row.get('mag') != '' ? row.getNum('mag') : 0
+        mag = mag.toFixed(mapAccuracy)
+        var depth = row.getNum('depth') || 0
+        depth = depth.toFixed(0)
 
         if (!heatMap.hasOwnProperty(day)){
             heatMap[day] = {}
@@ -136,6 +138,7 @@ var fade;
 var all = false
 
 function setupMap(){
+
     /*
     LEAFLET CODE
 
@@ -232,6 +235,7 @@ function draw(){
         $('#total').html(numberWithCommas(totalCount))
     } else {
         if (play==true){
+
             clear();
             setupGraph()
 
@@ -298,7 +302,6 @@ function addCircles(){
         if (row.get('mag')==''){
             continue
         }
-
         var then = row.get('time')
 
         if (then > now && all == false){
@@ -318,8 +321,9 @@ function addCircles(){
          }
 
 
+         let val = row.get('mag') != null ? row.getNum('mag') : 0
 
-        if (then < now && then > now-fade && row.getNum('mag') >= selectedMin && row.getNum('mag') <= selectedMax){
+        if (then < now && then > now-fade && val >= selectedMin && val <= selectedMax){
 
             var quakeColor = 'OrRd'
 
@@ -334,7 +338,7 @@ function addCircles(){
            }
    
            let magScale  = chroma.scale(quakeColor).mode('lch');
-           var magColorVal = map(row.getNum('mag'), magnitudeMin, magnitudeMax, 0, 1)
+           var magColorVal = map(val, magnitudeMin, magnitudeMax, 0, 1)
            var magErrorMap;
 
             if (row.get('magError')==''){
@@ -372,7 +376,7 @@ function addCircles(){
         }
 
 
-        if (then < now && row.getNum('mag') >= selectedMin && row.getNum('mag') <= selectedMax){
+        if (then < now && val >= selectedMin && val <= selectedMax){
             jsthen = new Date(then)
             jsthen.setHours(0,0,0,0);
 
@@ -383,7 +387,7 @@ function addCircles(){
                 ///////////////////////////////////////////////
                 // create graph 
                 var timescale = map(jsthen.getTime(), start-monthInMilliseconds, start, xPadding, width-xPadding-(barWidth*2))
-                var magGraphScale = map(row.getNum('mag'),0,magMax,0, height*0.3)
+                var magGraphScale = map(val,0,magMax,0, height*0.3)
                 var depthGraphScale = map(row.getNum('depth'),0,depthMax,0, height*0.3)
 
 
@@ -396,7 +400,7 @@ function addCircles(){
                 strokeWeight(2)
                 magScale  = chroma.scale('RdPu').mode('lch');
 
-                var magColorVal = map(Math.log(heatMap[jsthen][row.getNum('mag').toFixed(mapAccuracy)]), Math.log(heatMapMin), Math.log(heatMapMax), 1, 0) //log
+                var magColorVal = map(Math.log(heatMap[jsthen][val.toFixed(mapAccuracy)]), Math.log(heatMapMin), Math.log(heatMapMax), 1, 0) //log
 
                 stroke(magScale(magColorVal).hex())
                 line(timescale+barWidth+pad, magYmiddle-magGraphScale,timescale+(barWidth*2)+pad,magYmiddle-magGraphScale)
